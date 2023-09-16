@@ -34,7 +34,12 @@ var filters = class extends ExtensionCommon.ExtensionAPI {
           retval.junkPercent = val.junkPercent;
           break;
         default:
-          retval.str = val.str;
+          try {
+            retval.str = val.str;
+          }
+          catch (error) {
+            retval.str = "Message throws error: " + error.str;
+          }
           break;
       }
       return retval;
@@ -125,7 +130,8 @@ var filters = class extends ExtensionCommon.ExtensionAPI {
         async filterMatches(filterId, messageId) {
           let filter = filterMap[filterId];
           if (!filter) {
-            throw new Error('Invalid or stale filterId ' + filterId);
+            return false;
+            // throw new Error('Invalid or stale filterId ' + filterId);
           }
           let msg = context.extension.messageManager.get(messageId);
 
